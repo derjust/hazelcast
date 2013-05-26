@@ -30,7 +30,7 @@
     <icon></icon>
     <vendor-name>Hazelcast.com</vendor-name>
     <eis-type>Hazelcast</eis-type>
-    <resourceadapter-version>2.5.1-SNAPSHOT</resourceadapter-version>
+    <resourceadapter-version>2.4.1-SNAPSHOT</resourceadapter-version>
 
     <license>
         <description>Copyright (c) Hazelcast.com</description>
@@ -52,7 +52,7 @@
 					trace connection events</description>
 					<config-property-name>connectionTracingEvents</config-property-name>
 					<config-property-type>java.lang.String</config-property-type>
-					<config-property-value>FACTORY_INIT</config-property-value>
+					<config-property-value></config-property-value>
 				</config-property>
                 
                 <config-property>

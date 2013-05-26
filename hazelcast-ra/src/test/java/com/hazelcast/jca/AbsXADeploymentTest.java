@@ -25,15 +25,15 @@ import javax.sql.DataSource;
 import static org.junit.Assert.*;
 
 public abstract class AbsXADeploymentTest extends AbsDeploymentTest {
-
+	
 	protected DataSource ds;
 
 	@Override
 	public void setUp() throws Throwable {
 		super.setUp();
 		
-		embeddedJCAContainer.deploy((new File("src/test/resources/jdbc-xa.rar")).toURL());
-		embeddedJCAContainer.deploy((new File("src/test/resources/h2-xa-ds.xml")).toURL());
+		embeddedJCAContainer.deploy((new File("src/test/resources/jdbc-xa.rar")).toURI().toURL());
+		embeddedJCAContainer.deploy((new File("src/test/resources/h2-xa-ds.xml")).toURI().toURL());
 		
 		Object o = context.lookup("java:/HazelcastDS");
 		assertNotNull(o);

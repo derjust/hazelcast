@@ -19,6 +19,7 @@ package com.hazelcast.jca;
 import static org.junit.Assert.assertEquals;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
@@ -45,7 +46,6 @@ public class XATransactionCommitTest extends AbsXADeploymentTest {
 
 		m.put("key", "value");
 	
-		
 		assertEquals("value", m.get("key"));
 
 		doSql();
@@ -53,8 +53,33 @@ public class XATransactionCommitTest extends AbsXADeploymentTest {
 		tx.commit();
 
 		assertEquals("value", m.get("key"));
+		checkSqlWritten();
+		
 	}
 
+	private void checkSqlWritten() throws NamingException, SQLException {
+		Connection con = ds.getConnection();
+		Statement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery("SELECT COUNT(*) FROM TEST");
+			rs.next();
+			long count = rs.getLong(1);
+			
+			assertEquals(1, count);
+			
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+			if (stmt != null) {
+				stmt.close();
+			}
+			con.close();
+		}
+	}
+	
 	private void doSql() throws NamingException, SQLException {
 		Connection con = ds.getConnection();
 		Statement stmt = null;

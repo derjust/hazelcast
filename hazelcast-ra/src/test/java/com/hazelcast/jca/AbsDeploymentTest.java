@@ -21,6 +21,7 @@ import org.jboss.jca.embedded.EmbeddedFactory;
 
 import java.io.File;
 import java.net.URL;
+import java.util.logging.Level;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -30,10 +31,19 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+import com.hazelcast.logging.ILogger;
+import com.hazelcast.logging.Logger;
+
 import static org.junit.Assert.*;
 
 public class AbsDeploymentTest {
 
+	static {
+		System.setProperty("hazelcast.logging.type", "log4j");
+	}
+
+	private static final ILogger LOGGER = Logger.getLogger(AbsDeploymentTest.class.getName());
+	
 	/** Embedded */
 	protected static Embedded embeddedJCAContainer;
 
@@ -64,10 +74,10 @@ public class AbsDeploymentTest {
 	public void setUp() throws Throwable {
 		String archiveVersion = getClass().getPackage().getImplementationVersion();
 		if (archiveVersion == null) {
-			//TODO Dirty Hary 9 3/4
-			archiveVersion = "2.2.1";
-			System.err.println("Manifest entry for current version not found!");
-			System.err.println("Will continue with version " + archiveVersion);
+			//TODO Dirty Harry 9 3/4
+			archiveVersion = "2.4.1";
+			LOGGER.log(Level.WARNING, "Manifest entry for current version not found!");
+			LOGGER.log(Level.WARNING, "Will continue with version " + archiveVersion);
 		}
 		File f = new File("./target/hazelcast-ra-"+archiveVersion+".rar");
 		rarArchive = f.toURI().toURL();
@@ -94,8 +104,12 @@ public class AbsDeploymentTest {
 	}
 
 	@AfterClass
-	public static void afterClass() throws Throwable {
+	public static void afterClass() {
 		// Shutdown
-//embeddedJCAContainer.shutdown(); 
+		try {
+			embeddedJCAContainer.shutdown();
+		} catch (Throwable t) {
+			//shouldn't matter
+		}
 	}
 }
