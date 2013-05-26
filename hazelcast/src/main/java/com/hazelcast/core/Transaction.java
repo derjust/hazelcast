@@ -16,10 +16,11 @@
 
 package com.hazelcast.core;
 
+import com.hazelcast.impl.TransactionImpl;
+
 /**
  * Hazelcast transaction interface.
  * <p/>
- * <b>Note that Hazelcast doesn't support two phase commit (XA) transactions. </b>
  *
  * @see Hazelcast#getTransaction()
  */
@@ -62,4 +63,17 @@ public interface Transaction {
      * @return the status
      */
     int getStatus();
+
+	/**
+	 * @return Gets the current transaction timeout in milliseconds
+	 * @see {@link TransactionImpl#DEFAULT_TXN_TIMEOUT}
+	 */
+	long getTimeout();
+
+	/**
+	 * Sets the transaction timeout for all following operations
+	 * @param timeout New timeout in milliseconds
+	 * @see {@link TransactionImpl#DEFAULT_TXN_TIMEOUT}
+	 */
+	void setTimeout(long timeout);
 }

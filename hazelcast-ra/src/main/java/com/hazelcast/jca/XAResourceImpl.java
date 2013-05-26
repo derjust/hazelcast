@@ -50,7 +50,7 @@ public class XAResourceImpl implements XAResource {
 		managedConnection.log(Level.FINEST, "XA start: " + xid);
 		Transaction tx = managedConnection.getHazelcastInstance().getTransaction();
 		if (Transaction.TXN_STATUS_ACTIVE != tx.getStatus()) {
-			tx.setTransactionTimeout(transactionTimeout * 1000);
+			tx.setTimeout(transactionTimeout * 1000);
 			tx.begin();
 		}
 		transactionCache.put(xid, ThreadContext.get());
