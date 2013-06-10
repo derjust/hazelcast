@@ -48,7 +48,6 @@ import java.util.logging.Level;
 import static com.hazelcast.core.Instance.InstanceType;
 import static com.hazelcast.impl.ClusterOperation.*;
 import static com.hazelcast.impl.Constants.RedoType.*;
-import static com.hazelcast.impl.TransactionImpl.DEFAULT_TXN_TIMEOUT;
 import static com.hazelcast.impl.base.SystemLogService.Level.INFO;
 import static com.hazelcast.impl.base.SystemLogService.Level.TRACE;
 import static com.hazelcast.nio.IOUtil.toData;
@@ -1062,7 +1061,7 @@ public class ConcurrentMapManager extends BaseManager {
                 } else {
                     MLock mlock = new MLock();
                     boolean locked = mlock
-                            .lockAndGetValue(name, key, DEFAULT_TXN_TIMEOUT);
+                            .lockAndGetValue(name, key, txn.getTimeout());
                     if (!locked) {
                         throwTxTimeoutException(key);
                     }
@@ -1192,7 +1191,7 @@ public class ConcurrentMapManager extends BaseManager {
                     if (!txn.has(name, key)) {
                         MLock mlock = new MLock();
                         locked = mlock
-                                .lockAndGetValue(name, key, DEFAULT_TXN_TIMEOUT);
+                                .lockAndGetValue(name, key, txn.getTimeout());
                         if (!locked) {
                             throwTxTimeoutException(key);
                         }
@@ -1254,7 +1253,7 @@ public class ConcurrentMapManager extends BaseManager {
             if (txn != null && txn.getStatus() == Transaction.TXN_STATUS_ACTIVE) {
                 if (!txn.has(name, key)) {
                     MLock mlock = new MLock();
-                    boolean locked = mlock.lockAndGetValue(name, key, DEFAULT_TXN_TIMEOUT);
+                    boolean locked = mlock.lockAndGetValue(name, key, txn.getTimeout());
                     if (!locked) {
                         throwTxTimeoutException(key);
                     }
@@ -1376,7 +1375,7 @@ public class ConcurrentMapManager extends BaseManager {
             if (txn != null && txn.getStatus() == Transaction.TXN_STATUS_ACTIVE) {
                 if (!txn.has(name, key)) {
                     MLock mlock = new MLock();
-                    boolean locked = mlock.lock(name, key, DEFAULT_TXN_TIMEOUT);
+                    boolean locked = mlock.lock(name, key, txn.getTimeout());
                     if (!locked) {
                         throwTxTimeoutException(key);
                     }
@@ -1770,7 +1769,7 @@ public class ConcurrentMapManager extends BaseManager {
                 if (!txn.has(name, key)) {
                     MLock mlock = new MLock();
                     boolean locked = mlock
-                            .lockAndGetValue(name, key, DEFAULT_TXN_TIMEOUT);
+                            .lockAndGetValue(name, key, txn.getTimeout());
                     if (!locked) {
                         throwTxTimeoutException(key);
                     }
@@ -1829,7 +1828,7 @@ public class ConcurrentMapManager extends BaseManager {
                 if (!txn.has(name, key)) {
                     MLock mlock = new MLock();
                     boolean locked = mlock
-                            .lockAndGetValue(name, key, DEFAULT_TXN_TIMEOUT);
+                            .lockAndGetValue(name, key, txn.getTimeout());
                     if (!locked) {
                         throwTxTimeoutException(key);
                     }
@@ -1937,7 +1936,7 @@ public class ConcurrentMapManager extends BaseManager {
                 Collection committedValues = null;
                 if (!txn.has(name, key)) {
                     MLock mlock = new MLock();
-                    boolean locked = mlock.lockAndGetValue(name, key, DEFAULT_TXN_TIMEOUT);
+                    boolean locked = mlock.lockAndGetValue(name, key, txn.getTimeout());
                     if (!locked) throwTxTimeoutException(key);
                     committedValues = (Collection) toObject(mlock.oldValue);
                 } else {
@@ -1971,7 +1970,7 @@ public class ConcurrentMapManager extends BaseManager {
             if (txn != null && txn.getStatus() == Transaction.TXN_STATUS_ACTIVE) {
                 if (!txn.has(name, key)) {
                     MLock mlock = new MLock();
-                    boolean locked = mlock.lockAndGetValue(name, key, value, DEFAULT_TXN_TIMEOUT);
+                    boolean locked = mlock.lockAndGetValue(name, key, value, txn.getTimeout());
                     if (!locked) throwTxTimeoutException(key);
                     Data oldValue = mlock.oldValue;
                     boolean existingRecord = (oldValue != null);

@@ -45,4 +45,7 @@ public class TransactionClientProxy implements Transaction {
         ClientThreadContext threadContext = ClientThreadContext.get();
         threadContext.removeTransaction();
     }
+
+	public void setTimeout(long ms) {
+	}
 }
